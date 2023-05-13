@@ -10,6 +10,11 @@ FileName := "borderless_config.ini"
 DefaultSection := "config"
 ReadData()
 
+if !FileExist(FileName)
+{
+  WriteData()
+}
+
 ;Setup default text
 WindowTextPrefix := "Current Window: "
 
@@ -154,12 +159,12 @@ ReadData()
 {
   global
 
-  ;Read in all the variables we need
-  IniRead, XOffset, %FileName%, DefaultSection, XOffset
-  IniRead, YOffset, %FileName%, DefaultSection, YOffset
-  IniRead, ResWidth, %FileName%, DefaultSection, ResWidth
-  IniRead, ResHeight, %FileName%, DefaultSection, ResHeight
-  IniRead, HideTaskbar, %FileName%, DefaultSection, HideTaskbar
+  ;Read in all the variables we need with some defaults
+  IniRead, XOffset, %FileName%, DefaultSection, XOffset, 0
+  IniRead, YOffset, %FileName%, DefaultSection, YOffset, 0
+  IniRead, ResWidth, %FileName%, DefaultSection, ResWidth, % TotalWidth / 2
+  IniRead, ResHeight, %FileName%, DefaultSection, ResHeight, % TotalHeight / 2
+  IniRead, HideTaskbar, %FileName%, DefaultSection, HideTaskbar, True
 }
 
 WriteData()
