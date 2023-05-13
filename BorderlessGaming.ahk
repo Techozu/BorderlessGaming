@@ -211,7 +211,7 @@ Save:
 return
 
 ShowGui:
-  Gui, Show, w479 h379, Borderless Gaming - AHK Edition
+  Gui, Show, w479 h200, Borderless Gaming - AHK Edition
 return
 
 ExitApp:
