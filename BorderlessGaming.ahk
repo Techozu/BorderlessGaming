@@ -163,7 +163,7 @@ ReadData()
   IniRead, XOffset, %FileName%, DefaultSection, XOffset, 0
   IniRead, YOffset, %FileName%, DefaultSection, YOffset, 0
   IniRead, ResWidth, %FileName%, DefaultSection, ResWidth, % TotalWidth / 2
-  IniRead, ResHeight, %FileName%, DefaultSection, ResHeight, % TotalHeight / 2
+  IniRead, ResHeight, %FileName%, DefaultSection, ResHeight, %TotalHeight%
   IniRead, HideTaskbar, %FileName%, DefaultSection, HideTaskbar, True
 }
 
