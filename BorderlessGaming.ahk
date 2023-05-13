@@ -9,12 +9,15 @@ SysGet, TotalHeight, 79
 FileName := "borderless_config.ini"
 DefaultSection := "config"
 ReadData()
-gosub UpdateHotkey
 
 if !FileExist(FileName)
 {
+  NewMainHotkey:="F12"
+  gosub UpdateHotkey
   WriteData()
 }
+
+gosub UpdateHotkey
 
 ;Setup default text
 WindowTextPrefix := "Current Window: "
@@ -42,7 +45,7 @@ Gui, Add, UpDown, x437 y99 w0 h20 +Center 0x80 Range0-%TotalHeight% vResHeight, 
 Gui, Add, CheckBox, x22 y139 w140 h40 vHideTaskbar Checked%HideTaskbar%, Hide Taskbar and Start Button?
 
 Gui, Add, Text, x282 y139 w60 h20 +Center, Hotkey
-Gui, Add, Hotkey, x342 y139 w95 h20 +Center gUpdateHotkey vMainHotkey, F12
+Gui, Add, Hotkey, x342 y139 w95 h20 +Center gUpdateHotkey vNewMainHotkey, %MainHotkey%
 
 Gui, Add, Button, x180 y179 w140 h40 gSave Default, Save
 
@@ -174,7 +177,12 @@ ReadData()
   IniRead, ResWidth, %FileName%, DefaultSection, ResWidth, % TotalWidth / 2
   IniRead, ResHeight, %FileName%, DefaultSection, ResHeight, %TotalHeight%
   IniRead, HideTaskbar, %FileName%, DefaultSection, HideTaskbar, True
-  IniRead, MainHotkey, %FileName%, DefaultSection, MainHotkey, F12
+  IniRead, MainHotkey, %FileName%, DefaultSection, MainHotkey
+
+  if MainHotkey = ERROR
+  {
+    MainHotkey := ""
+  }
 }
 
 WriteData()
@@ -214,7 +222,24 @@ Check:
 return
 
 UpdateHotkey:
-  Hotkey, %MainHotkey%, ChangeBorderlessMode
+  ;Check a valid hotkey was set
+  if (NewMainHotkey is alnum) and (NewMainHotkey != "") and (NewMainHotkey != MainHotkey)
+  {
+    ;Disable old hotkey
+    if (MainHotkey is alnum) and (MainHotkey != "")
+    {
+      Hotkey, %MainHotkey%, Off
+    }
+
+    ;Enable new hotkey
+    MainHotkey := NewMainHotkey
+    Hotkey, %MainHotkey%, ChangeBorderlessMode
+  } else {
+    IF NewMainHotkey == ""
+    {
+      MainHotkey := ""
+    }
+  }
 return
 
 Save:
@@ -228,12 +253,14 @@ Save:
 return
 
 ShowGui:
+  ;Open GUI and inform script its oepn
   GUIOpen := 1
   Gui, Show, w479 h250, GUITitle
 return
 
 GuiClose:
 GuiEscape:
+  ;Close GUI and inform script its closed
   GUIOpen := 0
   Gui, Hide
 return
