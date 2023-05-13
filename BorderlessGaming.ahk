@@ -9,6 +9,7 @@ SysGet, TotalHeight, 79
 FileName := "borderless_config.ini"
 DefaultSection := "config"
 ReadData()
+gosub UpdateHotkey
 
 if !FileExist(FileName)
 {
@@ -17,6 +18,7 @@ if !FileExist(FileName)
 
 ;Setup default text
 WindowTextPrefix := "Current Window: "
+GUITitle := "Borderless Gaming - AHK Edition"
 
 ;Setup GUI
 Gui, Add, Text, x12 y19 w450 h20 +Center vCurrentWindowText, %WindowTextPrefix%
@@ -39,7 +41,10 @@ Gui, Add, UpDown, x437 y99 w0 h20 +Center 0x80 Range0-%TotalHeight% vResHeight, 
 
 Gui, Add, CheckBox, x22 y139 w140 h40 vHideTaskbar Checked%HideTaskbar%, Hide Taskbar and Start Button?
 
-Gui, Add, Button, x300 y139 w140 h40 gSave Default, Save
+Gui, Add, Text, x282 y139 w60 h20 +Center, Hotkey
+Gui, Add, Hotkey, x342 y139 w95 h20 +Center gUpdateHotkey vMainHotkey, F12
+
+Gui, Add, Button, x180 y179 w140 h40 gSave Default, Save
 
 ;Setup tray options
 Menu, Tray, Click, 2
@@ -49,7 +54,8 @@ Menu, Tray, Add, Exit App, ExitApp
 Menu, Tray, Default, Show GUI
 
 ;Display GUI
-Gui, Show, w479 h200, Borderless Gaming - AHK Edition
+GUIOpen := 1
+Gui, Show, w479 h250, GUITitle
 
 ;Setup a cleanup function if the script exits
 OnExit("Cleanup")
@@ -77,9 +83,12 @@ while (1)
   }
 }
 
+ChangeBorderlessMode:
+  if (GUIOpen == 1)
+  {
+    return
+  }
 
-
-F12::
   WinGet, TempWindowID, ID, A
   If (WindowID != TempWindowID)
   {
@@ -165,6 +174,7 @@ ReadData()
   IniRead, ResWidth, %FileName%, DefaultSection, ResWidth, % TotalWidth / 2
   IniRead, ResHeight, %FileName%, DefaultSection, ResHeight, %TotalHeight%
   IniRead, HideTaskbar, %FileName%, DefaultSection, HideTaskbar, True
+  IniRead, MainHotkey, %FileName%, DefaultSection, MainHotkey, F12
 }
 
 WriteData()
@@ -177,6 +187,7 @@ WriteData()
   IniWrite, %ResWidth%, %FileName%, DefaultSection, ResWidth
   IniWrite, %ResHeight%, %FileName%, DefaultSection, ResHeight
   IniWrite, %HideTaskbar%, %FileName%, DefaultSection, HideTaskbar
+  IniWrite, %MainHotkey%, %FileName%, DefaultSection, MainHotkey
 }
 
 Check:
@@ -202,16 +213,29 @@ Check:
   }
 return
 
+UpdateHotkey:
+  Hotkey, %MainHotkey%, ChangeBorderlessMode
+return
+
 Save:
   ;If the "Save" button is pressed then do a submit sa all variables are filled
   Gui, Submit
 
   ;Save Data
   WriteData()
+
+  GUIOpen := 0
 return
 
 ShowGui:
-  Gui, Show, w479 h200, Borderless Gaming - AHK Edition
+  GUIOpen := 1
+  Gui, Show, w479 h250, GUITitle
+return
+
+GuiClose:
+GuiEscape:
+  GUIOpen := 0
+  Gui, Hide
 return
 
 ExitApp:
