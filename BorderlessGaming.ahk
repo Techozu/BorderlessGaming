@@ -89,10 +89,10 @@ while (1)
 }
 
 ChangeBorderlessMode:
-  ;if (GUIOpen == 1)
-  ;{
-    ;return
-  ;}
+  if (GUIOpen == 1)
+  {
+    return
+  }
 
   WinGet, TempWindowID, ID, A
   If (WindowID != TempWindowID)
