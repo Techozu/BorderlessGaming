@@ -59,39 +59,40 @@ Menu, Tray, Default, Show GUI
 
 ;Display GUI
 GUIOpen := 1
-Gui, Show, w479 h250, GUITitle
+Gui, Show, w479 h250, %GUITitle%
 
 ;Setup a cleanup function if the script exits
 OnExit("Cleanup")
 
 while (1)
 {
-  if (WindowTitle)
+  if (WindowTitle and WindowTitle != "")
   {
     ;Wait for the window to close
-    WinWaitClose, %WindowTitle%
+    WinWaitClose, %WindowTitle%, , 5
 
-    ;If window was fullscreen => reset
-    if (WindowState == 1)
+    if (ErrorLevel == 0)
     {
-      Window()
-    }
+      ;Reset to Taskbar
+      WinShow, ahk_class Shell_TrayWnd
+      WinShow, Start ahk_class Button
 
-    ;Clear the variables for good measure
-    WindowState:=
-    WindowID:=
-    WindowTitle:=
-    GuiControl, , CurrentWindowText, %WindowTextPrefix%%WindowTitle%
+      ;Clear the variables for good measure
+      WindowState:=
+      WindowID:=
+      WindowTitle:=
+      GuiControl, , CurrentWindowText, %WindowTextPrefix%
+    }
   } else {
-    Sleep, 5000
+    Sleep, 500
   }
 }
 
 ChangeBorderlessMode:
-  if (GUIOpen == 1)
-  {
-    return
-  }
+  ;if (GUIOpen == 1)
+  ;{
+    ;return
+  ;}
 
   WinGet, TempWindowID, ID, A
   If (WindowID != TempWindowID)
@@ -178,11 +179,11 @@ ReadData()
   IniRead, ResWidth, %FileName%, DefaultSection, ResWidth, % TotalWidth / 2
   IniRead, ResHeight, %FileName%, DefaultSection, ResHeight, %TotalHeight%
   IniRead, HideTaskbar, %FileName%, DefaultSection, HideTaskbar, 1
-  IniRead, MainHotkey, %FileName%, DefaultSection, MainHotkey
+  IniRead, NewMainHotkey, %FileName%, DefaultSection, MainHotkey
 
-  if MainHotkey = ERROR
+  if (NewMainHotkey = ERROR)
   {
-    MainHotkey := ""
+    NewMainHotkey := ""
   }
 }
 
@@ -201,22 +202,22 @@ WriteData()
 
 Check:
   ;Check that each edit field only contains numbers (pasting circumvents the "Number" option of the edit)
-  if EditXOffset is integer
+  if (EditXOffset is integer)
   {
     GuiControl, , XOffset, %EditXOffset%
   }
 
-  if EditYOffset is integer
+  if (EditYOffset is integer)
   {
     GuiControl, , YOffset, %EditYOffset%
   }
 
-  if EditResWidth is integer
+  if (EditResWidth is integer)
   {
     GuiControl, , ResWidth, %EditResWidth%
   }
 
-  if EditResHeight is integer
+  if (EditResHeight is integer)
   {
     GuiControl, , ResHeight, %EditResHeight%
   }
@@ -224,7 +225,7 @@ return
 
 UpdateHotkey:
   ;Check a valid hotkey was set
-  if (NewMainHotkey is alnum) and (NewMainHotkey != "") and (NewMainHotkey != MainHotkey)
+  if (NewMainHotkey is alnum) and (NewMainHotkey != "")
   {
     ;Disable old hotkey
     if (MainHotkey is alnum) and (MainHotkey != "")
@@ -236,7 +237,7 @@ UpdateHotkey:
     MainHotkey := NewMainHotkey
     Hotkey, %MainHotkey%, ChangeBorderlessMode
   } else {
-    IF NewMainHotkey == ""
+    IF (NewMainHotkey == "")
     {
       MainHotkey := ""
     }
@@ -256,7 +257,7 @@ return
 ShowGui:
   ;Open GUI and inform script its oepn
   GUIOpen := 1
-  Gui, Show, w479 h250, GUITitle
+  Gui, Show, w479 h250, %GUITitle%
 return
 
 GuiClose:
