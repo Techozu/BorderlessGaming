@@ -6,6 +6,7 @@ SysGet, TotalWidth, 78
 SysGet, TotalHeight, 79
 
 ;Read in config
+SetWorkingDir,%A_ScriptDir%
 FileName := "borderless_config.ini"
 DefaultSection := "config"
 ReadData()
@@ -176,7 +177,7 @@ ReadData()
   IniRead, YOffset, %FileName%, DefaultSection, YOffset, 0
   IniRead, ResWidth, %FileName%, DefaultSection, ResWidth, % TotalWidth / 2
   IniRead, ResHeight, %FileName%, DefaultSection, ResHeight, %TotalHeight%
-  IniRead, HideTaskbar, %FileName%, DefaultSection, HideTaskbar, True
+  IniRead, HideTaskbar, %FileName%, DefaultSection, HideTaskbar, 1
   IniRead, MainHotkey, %FileName%, DefaultSection, MainHotkey
 
   if MainHotkey = ERROR
