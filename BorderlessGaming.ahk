@@ -66,12 +66,10 @@ OnExit("Cleanup")
 
 while (1)
 {
-  if (WindowTitle and WindowTitle != "")
+  if (WindowID)
   {
-    ;Wait for the window to close
-    WinWaitClose, %WindowTitle%, , 5
-
-    if (ErrorLevel == 0)
+    tempID := WinExist("ahk_id " WindowID)
+    if (not tempID)
     {
       ;Reset to Taskbar
       WinShow, ahk_class Shell_TrayWnd
