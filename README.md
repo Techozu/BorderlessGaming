@@ -16,5 +16,5 @@ For example to center a 2540x1440 window on an 49" Ultra Wide use
 
 - Save your settings, Open your Windows and Hit the HotKey to Go Borderless.
 
-For more details on a full Borderless Gaming setup checkout out this article.
+For more details on a full Borderless Gaming setup checkout out this article.<br/>
 https://techozu.com/fullscreen-apps-ultrawide-monitors/
