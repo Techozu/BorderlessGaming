@@ -1,3 +1,4 @@
+#Requires AutoHotkey >=1.1.36
 #SingleInstance
 #UseHook On
 
