@@ -97,8 +97,8 @@ while (1)
     if (tempID == 0)
     {
       ;Reset to Taskbar
-      WinShow("ahk_class Shell_TrayWnd")
-      WinShow("Start ahk_class Button")
+      try WinShow("ahk_class Shell_TrayWnd")
+      try WinShow("Start ahk_class Button")
 
       ;Clear the variables for good measure
       WindowState:=0
@@ -154,19 +154,19 @@ Fullscreen()
   global
 
   ;Get original window location
-  WinGetPos(WinPosX, WinPosY, WindowWidth, WindowHeight, "ahk_id " WindowID)
+  WinGetPos(&WinPosX, &WinPosY, &WindowWidth, &WindowHeight, "ahk_id " WindowID)
 
   ;Set window to be borderless
   WinSetStyle("-0xC40000", "ahk_id " WindowID)
 
   ;Move window to new location at X and Y offset
-  WinMove("ahk_id " WindowID, , XOffset, YOffset, ResWidth, ResHeight)
+  WinMove(XOffset, YOffset, ResWidth, ResHeight, "ahk_id " WindowID)
 
   ;Hide Windows Task Bar and Start Button if set to "True"
   if (HideTaskbar == 1)
   {
-    WinHide("ahk_class Shell_TrayWnd")
-    WinHide("Start ahk_class Button")
+    try WinHide("ahk_class Shell_TrayWnd")
+    try WinHide("Start ahk_class Button")
   }
 }
 
@@ -178,11 +178,11 @@ Window()
   WinSetStyle("+0xC40000", "ahk_id " WindowID)
 
   ;Move window back to original coordinates
-  WinMove("ahk_id " WindowID, , WinPosX, WinPosY, WindowWidth, WindowHeight)
+  WinMove(WinPosX, WinPosY, WindowWidth, WindowHeight, "ahk_id " WindowID)
 
   ;Show the task bar again
-  WinShow("ahk_class Shell_TrayWnd")
-  WinShow("Start ahk_class Button")
+  try WinShow("ahk_class Shell_TrayWnd")
+  try WinShow("Start ahk_class Button")
 }
 
 Cleanup(ExitReason, ExitCode)
